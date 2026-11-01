@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────────────────────────────────
+   ROLLA — thème « cinéma noir & ivoire »
+   ────────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  --color-noir: #0a0a09;
+  --color-ink: #121211;
+  --color-ivory: #efe9dc;
+  --color-smoke: #8d877c;
+
+  --font-serif: var(--font-instrument-serif), "Times New Roman", serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --ease-cine: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-rise: rise 1.4s var(--ease-cine) both;
+  --animate-fade: fade 1.8s var(--ease-cine) both;
+  --animate-beam: beam 2.4s var(--ease-cine) both;
+
+  @keyframes rise {
+    from {
+      transform: translateY(105%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes beam {
+    from {
+      opacity: 0;
+      transform: scaleY(0.6);
+    }
+    to {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  }
+  @keyframes scroll-cue {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(200%);
+    }
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--color-noir);
+    color-scheme: dark;
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: var(--color-noir);
+    color: var(--color-ivory);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--color-ivory);
+    color: var(--color-noir);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-ivory);
+    outline-offset: 4px;
+  }
+}
+
+/* Libellés « générique de film » : mono, capitales, large interlettrage. */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+/* Photos en noir & ivoire. */
+@utility mono-photo {
+  filter: grayscale(1) sepia(0.12) contrast(1.06) brightness(0.92);
+}
+
+/* Liens soulignés au survol par un filet. */
+@utility link-line {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.6s var(--ease-cine);
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* Masque les barres de défilement (pellicule). */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Grain argentique en surimpression. */
+.film-grain {
+  pointer-events: none;
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* Perforations de pellicule (galerie). */
+.sprockets {
+  height: 14px;
+  background-image: radial-gradient(
+    ellipse 5px 4px at center,
+    var(--color-noir) 90%,
+    transparent 100%
+  );
+  background-size: 22px 14px;
+  background-repeat: repeat-x;
+  background-position: 6px center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .film-grain {
+    animation: grain 0.9s steps(6) infinite;
+  }
+
+  @keyframes grain {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-4%, 3%); }
+    40% { transform: translate(3%, -5%); }
+    60% { transform: translate(-2%, 6%); }
+    80% { transform: translate(5%, 2%); }
+    100% { transform: translate(0, 0); }
+  }
+
+  /* Apparitions au défilement, 100 % CSS (scroll-driven animations).
+     Les navigateurs qui ne les supportent pas affichent simplement le contenu. */
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(2.5rem);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* En-tête : fond qui s'opacifie au début du défilement. */
+    .header-backdrop {
+      animation: header-in linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 40vh;
+    }
+
+    @keyframes header-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
