@@ -18,6 +18,17 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  /** Anciennes adresses (site actuel / liens externes) → nouvelles pages. */
+  async redirects() {
+    return [
+      { source: "/index.html", destination: "/", permanent: true },
+      { source: "/index.htm", destination: "/", permanent: true },
+      { source: "/:path(mariage|mariages|dj-mariage|dj-mariage-lyon)", destination: "/fr/mariage", permanent: true },
+      { source: "/:path(wedding|weddings|wedding-dj)", destination: "/en/weddings", permanent: true },
+      { source: "/:path(contact|booking|reservation)", destination: "/#contact", permanent: true },
+      { source: "/:path(mentions-legales|legal|legal-notice)", destination: "/fr/mentions-legales", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {
@@ -30,7 +41,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Médias (film, poster) : mis en cache une semaine.
+        // Médias (vidéos, images) : mis en cache une semaine.
         // Renommer le fichier lors d'un remplacement pour forcer la mise à jour.
         source: "/media/:path*",
         headers: [

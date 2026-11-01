@@ -1,58 +1,27 @@
 @import "tailwindcss";
 
 /* ──────────────────────────────────────────────────────────────────────────
-   ROLLA — thème « cinéma noir & ivoire »
+   ROLLA — direction artistique
+   Noir profond · blanc cassé · anthracite · accent champagne
    ────────────────────────────────────────────────────────────────────────── */
 
 @theme {
-  --color-noir: #0a0a09;
-  --color-ink: #121211;
-  --color-ivory: #efe9dc;
-  --color-smoke: #8d877c;
+  --color-noir: #0b0b0b;
+  --color-ivory: #f5f2eb;
+  --color-anthracite: #252525;
+  --color-champagne: #c6ad86;
+  --color-mist: #9a958c;
 
-  --font-serif: var(--font-instrument-serif), "Times New Roman", serif;
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 
-  --ease-cine: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 
-  --animate-rise: rise 1.4s var(--ease-cine) both;
-  --animate-fade: fade 1.8s var(--ease-cine) both;
-  --animate-beam: beam 2.4s var(--ease-cine) both;
+  --animate-scroll-cue: scroll-cue 2.4s var(--ease-in-out-quart) infinite;
 
-  @keyframes rise {
-    from {
-      transform: translateY(105%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-  @keyframes fade {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  @keyframes beam {
-    from {
-      opacity: 0;
-      transform: scaleY(0.6);
-    }
-    to {
-      opacity: 1;
-      transform: scaleY(1);
-    }
-  }
   @keyframes scroll-cue {
-    from {
-      transform: translateY(-100%);
-    }
-    to {
-      transform: translateY(200%);
-    }
+    0% { transform: translateY(-100%); }
+    60%, 100% { transform: translateY(200%); }
   }
 }
 
@@ -60,144 +29,137 @@
   html {
     background-color: var(--color-noir);
     color-scheme: dark;
-    scroll-padding-top: 5rem;
     -webkit-text-size-adjust: 100%;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    html {
-      scroll-behavior: smooth;
-    }
-  }
-
   body {
+    overflow-x: clip;
     background-color: var(--color-noir);
     color: var(--color-ivory);
     font-family: var(--font-sans);
+    font-stretch: 100%;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background-color: var(--color-ivory);
+    background-color: var(--color-champagne);
     color: var(--color-noir);
   }
 
   :focus-visible {
-    outline: 1px solid var(--color-ivory);
+    outline: 1px solid var(--color-champagne);
     outline-offset: 4px;
+  }
+
+  /* Champs de date : icône de calendrier claire sur fond sombre. */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.9);
+    opacity: 0.6;
   }
 }
 
-/* Libellés « générique de film » : mono, capitales, large interlettrage. */
-@utility label-mono {
-  font-family: var(--font-mono);
+/* Titres « display » : Archivo étendu, capitales, très grands. */
+@utility display {
+  font-stretch: 125%;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.88;
+  overflow-wrap: break-word;
+}
+
+/* Petits libellés : capitales espacées. */
+@utility eyebrow {
   font-size: 0.6875rem;
+  font-weight: 500;
   line-height: 1.4;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
 }
 
-/* Photos en noir & ivoire. */
-@utility mono-photo {
-  filter: grayscale(1) sepia(0.12) contrast(1.06) brightness(0.92);
+/* Photos : noir & blanc légèrement réchauffé (cohérence de palette). */
+@utility tone {
+  filter: grayscale(1) sepia(0.14) contrast(1.06) brightness(0.92);
 }
 
-/* Liens soulignés au survol par un filet. */
-@utility link-line {
+/* Lien souligné au survol. */
+@utility link-underline {
   background-image: linear-gradient(currentColor, currentColor);
   background-size: 0% 1px;
   background-position: 0 100%;
   background-repeat: no-repeat;
-  transition: background-size 0.6s var(--ease-cine);
+  transition: background-size 0.7s var(--ease-expo);
   &:hover,
   &:focus-visible {
     background-size: 100% 1px;
   }
 }
 
-/* Masque les barres de défilement (pellicule). */
-@utility no-scrollbar {
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+/* Masques SplitText : zone de découpe élargie pour ne pas rogner les accents
+   des capitales (É, À…) avec les interlignages serrés des titres. */
+.line-mask,
+.char-mask {
+  padding-top: 0.22em;
+  margin-top: -0.22em;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+/* Lettre par lettre : marge latérale pour l'interlettrage négatif. */
+.char-mask {
+  padding-inline: 0.08em;
+  margin-inline: -0.08em;
 }
 
-/* Grain argentique en surimpression. */
-.film-grain {
+/* Lenis (défilement doux). */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Grain discret en surimpression. */
+.grain {
   pointer-events: none;
   position: fixed;
   inset: -50%;
-  z-index: 60;
-  opacity: 0.07;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 70;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
 }
 
-/* Perforations de pellicule (galerie). */
-.sprockets {
-  height: 14px;
-  background-image: radial-gradient(
-    ellipse 5px 4px at center,
-    var(--color-noir) 90%,
-    transparent 100%
-  );
-  background-size: 22px 14px;
-  background-repeat: repeat-x;
-  background-position: 6px center;
-}
-
 @media (prefers-reduced-motion: no-preference) {
-  .film-grain {
-    animation: grain 0.9s steps(6) infinite;
+  /* Éléments animés à l'ouverture : invisibles jusqu'au lancement de l'animation. */
+  .js:not(.intro-done) [data-intro] {
+    opacity: 0;
   }
 
+  .grain {
+    animation: grain 1s steps(5) infinite;
+  }
   @keyframes grain {
-    0% { transform: translate(0, 0); }
-    20% { transform: translate(-4%, 3%); }
-    40% { transform: translate(3%, -5%); }
-    60% { transform: translate(-2%, 6%); }
-    80% { transform: translate(5%, 2%); }
-    100% { transform: translate(0, 0); }
-  }
-
-  /* Apparitions au défilement, 100 % CSS (scroll-driven animations).
-     Les navigateurs qui ne les supportent pas affichent simplement le contenu. */
-  @supports (animation-timeline: view()) {
-    .reveal {
-      animation: reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 70%;
-    }
-
-    @keyframes reveal {
-      from {
-        opacity: 0;
-        transform: translateY(2.5rem);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    /* En-tête : fond qui s'opacifie au début du défilement. */
-    .header-backdrop {
-      animation: header-in linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 40vh;
-    }
-
-    @keyframes header-in {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    0%, 100% { transform: translate(0, 0); }
+    20% { transform: translate(-3%, 2%); }
+    40% { transform: translate(2%, -4%); }
+    60% { transform: translate(-1%, 5%); }
+    80% { transform: translate(4%, 1%); }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {

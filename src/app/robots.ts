@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { getSiteUrl, isIndexingAllowed } from "@/lib/site";
+import { getSiteUrl, isIndexingAllowed } from "@/lib/env";
 
 export default function robots(): MetadataRoute.Robots {
   if (!isIndexingAllowed()) {
