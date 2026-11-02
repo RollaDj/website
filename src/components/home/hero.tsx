@@ -4,11 +4,12 @@ import { useRef } from "react";
 
 import { ButtonLink, Arrow } from "@/components/ui/button-link";
 import { CutoutVideo } from "@/components/ui/cutout-video";
+import { LogoDjRolla } from "@/components/ui/logo-dj-rolla";
 import { MediaTag } from "@/components/ui/media-tag";
 import type { CutoutMedia } from "@/content/media";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { gsap, SplitText, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP } from "@/lib/gsap";
 
 type Props = {
   locale: Locale;
@@ -18,7 +19,8 @@ type Props = {
 };
 
 /**
- * HERO — ROLLA détouré, en grand, devant le titre géant (effet de profondeur).
+ * HERO — logo DJ ROLLA en grand et ROLLA détouré (effet de profondeur :
+ * l'artiste passe légèrement devant le « J », le nom reste lisible).
  * Montage : arrivée face caméra (une fois), puis boucle à la trompette.
  */
 export function Hero({ locale, hero, tags, cutout }: Props) {
@@ -28,15 +30,15 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
     () => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const split = SplitText.create("[data-hero-title]", { type: "words,chars", mask: "chars", charsClass: "char" });
-
-        // Ouverture : projecteur, titre, puis l'artiste qui entre en scène.
+        // Ouverture : projecteur, le « DJ » du logo, les lettres de ROLLA,
+        // puis l'artiste qui entre en scène.
         gsap
           .timeline({ defaults: { ease: "expo.out" } })
           .fromTo("[data-hero-glow]", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 2.6 }, 0)
-          .fromTo("[data-hero-title]", { opacity: 0 }, { opacity: 1, duration: 0.01 }, 0.15)
-          .from(split.chars, { yPercent: 125, duration: 1.6, stagger: 0.07 }, 0.15)
-          .fromTo("[data-hero-media]", { opacity: 0, yPercent: 4 }, { opacity: 1, yPercent: 0, duration: 2.2 }, 0.35)
+          .fromTo("[data-hero-title]", { opacity: 0 }, { opacity: 1, duration: 0.01 }, 0.1)
+          .fromTo("[data-logo-dj]", { opacity: 0, scale: 1.06, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 2.2 }, 0.1)
+          .fromTo("[data-logo-letter]", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.4, stagger: 0.09 }, 0.45)
+          .fromTo("[data-hero-media]", { opacity: 0, yPercent: 4 }, { opacity: 1, yPercent: 0, duration: 2.2 }, 0.6)
           .fromTo("[data-hero-fade]", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1.4, stagger: 0.08 }, 1);
 
         // Sortie au défilement : profondeur (le titre file plus vite que l'artiste).
@@ -45,7 +47,7 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
             scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true },
             defaults: { ease: "none" },
           })
-          .to("[data-hero-title]", { yPercent: -45 }, 0)
+          .to("[data-hero-title]", { yPercent: -30 }, 0)
           .to("[data-hero-media]", { yPercent: 8, scale: 1.04 }, 0)
           .to("[data-hero-content]", { yPercent: -16, opacity: 0 }, 0)
           .to("[data-hero-glow]", { opacity: 0 }, 0);
@@ -66,24 +68,25 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
         data-hero-glow
         data-intro
         aria-hidden="true"
-        className="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_38%_55%_at_50%_48%,rgba(198,173,134,0.24),rgba(198,173,134,0.06)_50%,transparent_75%)] max-sm:bg-[radial-gradient(ellipse_70%_50%_at_50%_45%,rgba(198,173,134,0.24),rgba(198,173,134,0.06)_50%,transparent_78%)]"
+        className="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_70%_50%_at_50%_45%,rgba(198,173,134,0.22),rgba(198,173,134,0.06)_50%,transparent_78%)] lg:bg-[radial-gradient(ellipse_30%_55%_at_70%_48%,rgba(198,173,134,0.22),rgba(198,173,134,0.06)_50%,transparent_75%)]"
       />
 
-      {/* Titre géant, derrière l'artiste */}
+      {/* Logo DJ ROLLA, derrière l'artiste */}
       <h1
         id="hero-title"
         data-hero-title
         data-intro
-        className="display absolute inset-x-0 top-[31%] -z-20 select-none text-center text-[calc((100vw-2.5rem)/4.1)] leading-[0.78] tracking-[-0.04em] text-ivory sm:text-[calc((100vw-4rem)/4.1)] lg:top-[29%] lg:text-[calc((100vw-6rem)/4.1)]"
+        className="absolute left-1/2 top-[max(7.5rem,17svh)] -z-20 w-[min(80vw,26rem)] -translate-x-1/2 select-none text-[#F2E7D6] sm:w-[min(66vw,calc((100svh-26rem)*1.465))] lg:left-12 lg:top-[max(9rem,16svh)] lg:w-[min(44vw,calc((100svh-26rem)*1.465))] lg:translate-x-0"
       >
-        ROLLA
+        <span className="sr-only">DJ ROLLA</span>
+        <LogoDjRolla className="block h-auto w-full" />
       </h1>
 
       {/* ROLLA détouré */}
       <div
         data-hero-media
         data-intro
-        className="absolute bottom-0 left-1/2 -z-10 aspect-[9/16] h-[106svh] -translate-x-1/2 sm:h-[112svh] lg:h-[122svh]"
+        className="absolute bottom-0 left-1/2 -z-10 aspect-[9/16] h-[90svh] -translate-x-1/2 sm:h-[100svh] lg:left-[68%] lg:h-[122svh]"
       >
         <CutoutVideo
           src={cutout.src}
@@ -115,8 +118,8 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
         <div className="flex-1" />
 
         <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-4">
-            <p data-hero-fade data-intro className="display text-2xl leading-[0.95] sm:text-3xl xl:text-4xl">
+          <div className="lg:col-span-6">
+            <p data-hero-fade data-intro className="display text-2xl leading-[0.95] sm:text-3xl">
               {hero.subtitleA}
               <br />
               <span className="text-champagne">{hero.subtitleB}</span>
@@ -125,7 +128,7 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
               {hero.line}
             </p>
           </div>
-          <div data-hero-fade data-intro className="flex flex-wrap gap-3 lg:col-span-4 lg:col-start-9 lg:justify-end">
+          <div data-hero-fade data-intro className="flex flex-wrap gap-3 lg:col-span-6 lg:justify-end">
             <ButtonLink href="#experience">
               {hero.discover}
               <Arrow />
@@ -136,7 +139,7 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
           </div>
         </div>
 
-        <div data-hero-fade data-intro aria-hidden="true" className="mt-8 hidden items-center gap-4 lg:flex">
+        <div data-hero-fade data-intro aria-hidden="true" className="mt-8 hidden items-center gap-4 lg:flex [@media(max-height:780px)]:lg:hidden">
           <span className="relative block h-10 w-px overflow-hidden bg-ivory/15">
             <span className="absolute inset-x-0 top-0 h-1/2 animate-scroll-cue bg-champagne" />
           </span>

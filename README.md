@@ -78,10 +78,22 @@ Chaque média porte un statut dans `src/content/media.ts`. Tant que
 Aucune vidéo fictive n’est utilisée : le hero et la séquence au scroll
 utilisent les vraies vidéos de ROLLA.
 
+### Logo
+
+Le logo DJ ROLLA (fichier fourni : `src/assets/brand/logo-dj-rolla-source.png`)
+a été vectorisé. Le SVG est identique à l’original à 99,5 %, et reste net à
+toute taille.
+
+- `public/brand/logo-dj-rolla.svg` : fichier autonome, ivoire `#F2E7D6`.
+- `src/components/ui/logo-dj-rolla.tsx` : composant React en `currentColor`.
+  Le « DJ » et chaque lettre de « ROLLA » sont des éléments séparés, ce qui
+  permet de les animer.
+
 ### Hero détouré
 
-ROLLA apparaît en grand, sans fond, devant le titre géant (effet de
-profondeur), sur un halo champagne.
+Le logo DJ ROLLA est en grand, entièrement lisible : à gauche sur ordinateur,
+en haut sur mobile. ROLLA apparaît en grand à côté, sans fond, sur un halo
+champagne.
 
 - **Détourage** : [Robust Video Matting](https://github.com/PeterL1n/RobustVideoMatting)
   (modèle ResNet-50), image par image, avec continuité temporelle (pas de
