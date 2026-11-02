@@ -52,7 +52,6 @@ const en: Dictionary = {
     line: "Where electronic music meets live improvisation.",
     discover: "Discover the experience",
     book: "Book ROLLA",
-    scroll: "Scroll",
   },
 
   experience: {

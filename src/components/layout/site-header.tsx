@@ -107,7 +107,7 @@ export function SiteHeader({ locale, page, alternates, nav, a11y }: Props) {
           ROLLA
         </a>
 
-        <nav aria-label={a11y.mainNav} className="hidden lg:block">
+        <nav aria-label={a11y.mainNav} className="hidden xl:block">
           <ul className="flex items-center gap-10">
             {links.map((link) => (
               <li key={link.id}>
@@ -135,7 +135,7 @@ export function SiteHeader({ locale, page, alternates, nav, a11y }: Props) {
             onClick={() => setOpen(true)}
             aria-expanded={open}
             aria-controls="site-menu"
-            className="eyebrow flex h-10 items-center gap-3 text-ivory lg:hidden"
+            className="eyebrow flex h-10 items-center gap-3 text-ivory xl:hidden"
           >
             {a11y.openMenu}
             <span aria-hidden="true" className="flex w-6 flex-col gap-[6px]">
@@ -153,7 +153,7 @@ export function SiteHeader({ locale, page, alternates, nav, a11y }: Props) {
           role="dialog"
           aria-modal="true"
           aria-label={a11y.mainNav}
-          className="fixed inset-0 z-50 flex flex-col bg-noir px-5 sm:px-8 lg:hidden"
+          className="fixed inset-0 z-50 flex flex-col bg-noir px-5 sm:px-8 xl:hidden"
         >
           <div className="flex h-16 items-center justify-between">
             <span className="display text-xl tracking-[0.08em]">ROLLA</span>

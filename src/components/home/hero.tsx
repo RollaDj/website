@@ -71,12 +71,18 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
         className="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_70%_50%_at_50%_45%,rgba(198,173,134,0.22),rgba(198,173,134,0.06)_50%,transparent_78%)] lg:bg-[radial-gradient(ellipse_38%_55%_at_50%_48%,rgba(198,173,134,0.22),rgba(198,173,134,0.06)_50%,transparent_75%)]"
       />
 
-      {/* Logo DJ ROLLA, centré, derrière l'artiste */}
+      {/*
+        Logo DJ ROLLA sur toute la largeur (marges de la page), derrière l'artiste.
+        Sur ordinateur, il est plus haut que l'écran : le bas du D et du J passe
+        sous le texte (dégradé). Sa largeur n'est réduite que sur les écrans
+        très bas, pour que la ligne « ROLLA » (40 → 59 % de sa hauteur, soit
+        largeur × 0,40) reste toujours au-dessus du texte.
+      */}
       <h1
         id="hero-title"
         data-hero-title
         data-intro
-        className="absolute left-1/2 top-[max(7.5rem,17svh)] -z-20 w-[min(84vw,27rem)] -translate-x-1/2 select-none text-[#F2E7D6] sm:w-[min(72vw,calc((100svh-26rem)*1.465))] lg:top-[max(9rem,16svh)] lg:w-[min(70vw,calc((100svh-26rem)*1.465))]"
+        className="absolute left-1/2 top-[max(8rem,17svh)] -z-20 w-[calc(100%-2.5rem)] -translate-x-1/2 select-none text-[#F2E7D6] sm:w-[min(calc(100%-4rem),calc((max(100svh,40rem)-max(8rem,17svh)-17rem)*2.48))] lg:top-36 lg:w-[min(calc(100%-6rem),calc((max(100svh,40rem)-21rem)*2.48))] xl:w-[min(calc(100%-6rem),calc((max(100svh,40rem)-17rem)*2.48))]"
       >
         <span className="sr-only">DJ ROLLA</span>
         <LogoDjRolla className="block h-auto w-full" />
@@ -102,7 +108,7 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
       {/* Lisibilité du texte en bas d'écran */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[56%] bg-gradient-to-t from-noir via-noir/80 to-transparent lg:h-[34%] lg:via-noir/70"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[56%] bg-gradient-to-t from-noir via-noir/80 to-transparent lg:h-[30%] lg:via-noir/70 xl:h-48 xl:via-noir/85 xl:via-40%"
       />
 
       <div data-hero-content className="relative flex h-full flex-col px-5 pb-8 pt-24 sm:px-8 lg:px-12 lg:pb-10 lg:pt-28">
@@ -117,18 +123,19 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
 
         <div className="flex-1" />
 
-        <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-6">
-            <p data-hero-fade data-intro className="display text-2xl leading-[0.95] sm:text-3xl">
+        {/* Grand écran : une seule ligne basse, pour laisser la hauteur au logo. */}
+        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-10">
+          <div className="xl:flex xl:items-end xl:gap-10">
+            <p data-hero-fade data-intro className="display shrink-0 text-2xl leading-[0.95] sm:text-3xl">
               {hero.subtitleA}
               <br />
               <span className="text-champagne">{hero.subtitleB}</span>
             </p>
-            <p data-hero-fade data-intro className="mt-4 max-w-xs text-sm leading-relaxed text-ivory/75 sm:text-base">
+            <p data-hero-fade data-intro className="mt-4 max-w-xs text-sm leading-relaxed text-ivory/75 sm:text-base xl:mt-0">
               {hero.line}
             </p>
           </div>
-          <div data-hero-fade data-intro className="flex flex-wrap gap-3 lg:col-span-6 lg:justify-end">
+          <div data-hero-fade data-intro className="flex flex-wrap gap-3 lg:shrink-0 lg:flex-nowrap">
             <ButtonLink href="#experience">
               {hero.discover}
               <Arrow />
@@ -137,13 +144,6 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
               {hero.book}
             </ButtonLink>
           </div>
-        </div>
-
-        <div data-hero-fade data-intro aria-hidden="true" className="mt-8 hidden items-center gap-4 lg:flex [@media(max-height:780px)]:lg:hidden">
-          <span className="relative block h-10 w-px overflow-hidden bg-ivory/15">
-            <span className="absolute inset-x-0 top-0 h-1/2 animate-scroll-cue bg-champagne" />
-          </span>
-          <span className="eyebrow text-ivory/45">{hero.scroll}</span>
         </div>
       </div>
     </section>

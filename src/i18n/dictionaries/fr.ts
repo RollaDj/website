@@ -54,7 +54,6 @@ const fr = {
     line: "Quand la musique électronique rencontre l’improvisation live.",
     discover: "Découvrir l’expérience",
     book: "Réserver ROLLA",
-    scroll: "Défiler",
   },
 
   experience: {

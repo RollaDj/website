@@ -96,6 +96,13 @@ silhouette passe devant le cœur du logo, ce qui crée un effet de profondeur à
 la manière d’une couverture de magazine. Le tout est posé sur un halo
 champagne.
 
+Le logo occupe **toute la largeur** de la page (aux marges près). Sur
+ordinateur, il est plus haut que l’écran : le bas du D et du J passe sous le
+texte, dans le dégradé sombre. Sa largeur n’est réduite que sur les écrans
+peu hauts par rapport à leur largeur (par exemple un portable 1280 × 720 :
+87 % de la largeur), pour que la ligne « ROLLA » ne touche jamais le texte
+du bas.
+
 - **Détourage** : [Robust Video Matting](https://github.com/PeterL1n/RobustVideoMatting)
   (modèle ResNet-50), image par image, avec continuité temporelle (pas de
   scintillement). La trompette est conservée. À l’intérieur de la
