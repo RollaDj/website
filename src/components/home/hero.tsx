@@ -19,8 +19,8 @@ type Props = {
 };
 
 /**
- * HERO — logo DJ ROLLA en grand et ROLLA détouré (effet de profondeur :
- * l'artiste passe légèrement devant le « J », le nom reste lisible).
+ * HERO — ROLLA détouré, en grand, DEVANT le logo DJ ROLLA centré
+ * (effet de profondeur, façon couverture de magazine).
  * Montage : arrivée face caméra (une fois), puis boucle à la trompette.
  */
 export function Hero({ locale, hero, tags, cutout }: Props) {
@@ -68,15 +68,15 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
         data-hero-glow
         data-intro
         aria-hidden="true"
-        className="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_70%_50%_at_50%_45%,rgba(198,173,134,0.22),rgba(198,173,134,0.06)_50%,transparent_78%)] lg:bg-[radial-gradient(ellipse_30%_55%_at_70%_48%,rgba(198,173,134,0.22),rgba(198,173,134,0.06)_50%,transparent_75%)]"
+        className="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_70%_50%_at_50%_45%,rgba(198,173,134,0.22),rgba(198,173,134,0.06)_50%,transparent_78%)] lg:bg-[radial-gradient(ellipse_38%_55%_at_50%_48%,rgba(198,173,134,0.22),rgba(198,173,134,0.06)_50%,transparent_75%)]"
       />
 
-      {/* Logo DJ ROLLA, derrière l'artiste */}
+      {/* Logo DJ ROLLA, centré, derrière l'artiste */}
       <h1
         id="hero-title"
         data-hero-title
         data-intro
-        className="absolute left-1/2 top-[max(7.5rem,17svh)] -z-20 w-[min(80vw,26rem)] -translate-x-1/2 select-none text-[#F2E7D6] sm:w-[min(66vw,calc((100svh-26rem)*1.465))] lg:left-12 lg:top-[max(9rem,16svh)] lg:w-[min(44vw,calc((100svh-26rem)*1.465))] lg:translate-x-0"
+        className="absolute left-1/2 top-[max(7.5rem,17svh)] -z-20 w-[min(84vw,27rem)] -translate-x-1/2 select-none text-[#F2E7D6] sm:w-[min(72vw,calc((100svh-26rem)*1.465))] lg:top-[max(9rem,16svh)] lg:w-[min(70vw,calc((100svh-26rem)*1.465))]"
       >
         <span className="sr-only">DJ ROLLA</span>
         <LogoDjRolla className="block h-auto w-full" />
@@ -86,7 +86,7 @@ export function Hero({ locale, hero, tags, cutout }: Props) {
       <div
         data-hero-media
         data-intro
-        className="absolute bottom-0 left-1/2 -z-10 aspect-[9/16] h-[90svh] -translate-x-1/2 sm:h-[100svh] lg:left-[68%] lg:h-[122svh]"
+        className="absolute bottom-0 left-1/2 -z-10 aspect-[9/16] h-[104svh] -translate-x-1/2 sm:h-[112svh] lg:h-[122svh]"
       >
         <CutoutVideo
           src={cutout.src}

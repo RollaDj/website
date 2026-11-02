@@ -91,8 +91,9 @@ toute taille.
 
 ### Hero détouré
 
-Le logo DJ ROLLA est en grand, entièrement lisible : à gauche sur ordinateur,
-en haut sur mobile. ROLLA apparaît en grand à côté, sans fond, sur un halo
+ROLLA apparaît en grand, sans fond, **devant** le logo DJ ROLLA centré : sa
+silhouette passe devant le cœur du logo, ce qui crée un effet de profondeur à
+la manière d’une couverture de magazine. Le tout est posé sur un halo
 champagne.
 
 - **Détourage** : [Robust Video Matting](https://github.com/PeterL1n/RobustVideoMatting)
