@@ -5,6 +5,16 @@
    Noir profond · blanc cassé · anthracite · accent champagne
    ────────────────────────────────────────────────────────────────────────── */
 
+/* Écran large (paysage) : les vidéos verticales sont présentées entières dans
+   un cadre 9:16 à droite, le texte à gauche. Sinon : plein cadre. */
+@custom-variant wide (@media (min-width: 1024px) and (min-aspect-ratio: 5/4));
+
+:root {
+  /* Cadre vidéo vertical : hauteur = écran − 8,5 rem (marges), largeur 9:16. */
+  --frame-w: calc((100svh - 8.5rem) * 0.5625);
+  --frame-right: 6vw;
+}
+
 @theme {
   --color-noir: #0b0b0b;
   --color-ivory: #f5f2eb;

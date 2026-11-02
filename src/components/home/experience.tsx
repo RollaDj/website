@@ -13,6 +13,11 @@ type Props = {
   tags: Dictionary["mediaTag"];
 };
 
+/** Vidéo verticale sur écran large : cadre 9:16 à droite, contenu à gauche. */
+const PORTRAIT = media.orientation === "portrait";
+const FRAME = PORTRAIT ? "wide:inset-auto wide:bottom-10 wide:right-[var(--frame-right)] wide:top-24 wide:w-[var(--frame-w)]" : "";
+const BESIDE_FRAME = PORTRAIT ? "wide:pr-[calc(var(--frame-right)+var(--frame-w)+3rem)]" : "";
+
 /** Ordinateur (écran large + souris) : vidéo. Sinon : séquence d'images. */
 const DESKTOP = "(min-width: 768px) and (pointer: fine)";
 /** Longueur du défilement pendant lequel la section reste épinglée. */
@@ -243,8 +248,17 @@ function ScrollExperience({ copy, tags, mode }: Props & { mode: Mode }) {
       aria-labelledby="experience-title"
       className="relative h-svh overflow-hidden bg-noir"
     >
-      {/* Média synchronisé */}
-      <div data-exp-frame className="absolute inset-0 [clip-path:inset(0%_0%_0%_0%)]">
+      {/* Ambiance (écran large) : image de la séquence, très floutée */}
+      {PORTRAIT && (
+        <div aria-hidden="true" className="absolute inset-0 hidden wide:block">
+          {/* eslint-disable-next-line @next/next/no-img-element -- fond décoratif flouté */}
+          <img src={media.still} alt="" className="h-full w-full scale-110 object-cover opacity-25 blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-r from-noir via-noir/85 to-noir/40" />
+        </div>
+      )}
+
+      {/* Média synchronisé (proportions d'origine) */}
+      <div data-exp-frame className={`absolute inset-0 [clip-path:inset(0%_0%_0%_0%)] ${FRAME}`}>
         {/* eslint-disable-next-line @next/next/no-img-element -- image d'attente plein écran */}
         <img src={media.poster} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
         {mode === "video" ? (
@@ -262,11 +276,21 @@ function ScrollExperience({ copy, tags, mode }: Props & { mode: Mode }) {
         ) : (
           <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 h-full w-full" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-noir/50 via-transparent to-noir/70" />
+        {/* Lisibilité du texte en plein cadre */}
+        <div className={PORTRAIT ? "wide:hidden" : ""}>
+          <div className="absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-noir/70 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-[62%] bg-gradient-to-t from-noir via-noir/75 to-transparent" />
+        </div>
+        {PORTRAIT && <div className="absolute inset-0 hidden ring-1 ring-inset ring-ivory/10 wide:block" />}
       </div>
 
       {/* Libellé d'ouverture */}
-      <div data-exp-intro className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center">
+      <div
+        data-exp-intro
+        className={`absolute inset-0 flex flex-col items-center justify-center px-5 text-center ${
+          PORTRAIT ? `wide:items-start wide:pl-12 wide:text-left ${BESIDE_FRAME}` : ""
+        }`}
+      >
         <h2 id="experience-title" className="eyebrow text-champagne">
           {copy.label}
         </h2>
@@ -280,14 +304,24 @@ function ScrollExperience({ copy, tags, mode }: Props & { mode: Mode }) {
       </div>
 
       {/* Les mots, superposés (aria-hidden : versions accessibles plus bas) */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex items-center px-5 sm:px-8 lg:px-12">
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 flex items-end px-5 pb-32 sm:px-8 lg:px-12 ${
+          PORTRAIT ? `wide:items-center wide:pb-0 ${BESIDE_FRAME}` : "lg:items-center lg:pb-0"
+        }`}
+      >
         <div className="grid w-full">
           {copy.chapters.map((chapter, i) => (
             <div key={chapter.word} data-chapter className="invisible [grid-area:1/1]">
               <p className="eyebrow mb-6 text-champagne">
                 {String(i + 1).padStart(2, "0")} / {String(copy.chapters.length).padStart(2, "0")}
               </p>
-              <p data-word className="display text-[10.6vw] leading-[0.84] tracking-[-0.03em]">
+              <p
+                data-word
+                className={`display text-[10.6vw] leading-[0.84] tracking-[-0.03em] ${
+                  PORTRAIT ? "wide:text-[calc((100vw-var(--frame-w)-var(--frame-right)-6rem)/8.6)]" : ""
+                }`}
+              >
                 {chapter.word}
               </p>
               <p data-text className="mt-8 max-w-md text-base leading-relaxed text-ivory/80 sm:text-lg lg:ml-[0.3vw]">
@@ -299,7 +333,7 @@ function ScrollExperience({ copy, tags, mode }: Props & { mode: Mode }) {
       </div>
 
       {/* Interface : progression des trois temps + chargement */}
-      <div data-exp-ui className="absolute inset-x-0 bottom-0 px-5 pb-6 sm:px-8 lg:px-12 lg:pb-8">
+      <div data-exp-ui className={`absolute inset-x-0 bottom-0 px-5 pb-6 sm:px-8 lg:px-12 lg:pb-8 ${BESIDE_FRAME}`}>
         <div className="flex items-end justify-between gap-4">
           <p
             ref={loaderRef}
@@ -341,22 +375,31 @@ function ScrollExperience({ copy, tags, mode }: Props & { mode: Mode }) {
 function StaticExperience({ copy, tags }: Props) {
   return (
     <section id="experience" aria-labelledby="experience-title" className="relative overflow-hidden bg-noir">
-      {/* eslint-disable-next-line @next/next/no-img-element -- image fixe décorative */}
-      <img src={media.still} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover opacity-40" />
-      <div className="relative px-5 py-28 sm:px-8 lg:px-12 lg:py-40">
-        <h2 id="experience-title" className="eyebrow text-champagne">
-          {copy.label}
-        </h2>
-        <p className="display mt-6 max-w-4xl text-[8vw] sm:text-5xl lg:text-6xl">{copy.intro}</p>
-        <ol className="mt-20 grid gap-14 lg:grid-cols-3">
-          {copy.chapters.map((chapter) => (
-            <li key={chapter.word}>
-              <p className="display text-4xl lg:text-[3.1vw]">{chapter.word}</p>
-              <p className="mt-5 max-w-sm leading-relaxed text-ivory/75">{chapter.text}</p>
-            </li>
-          ))}
-        </ol>
-        <MediaTag status={media.status} labels={tags} note={media.note} className="mt-16" />
+      <div className="relative grid gap-14 px-5 py-28 sm:px-8 lg:px-12 lg:py-40 wide:grid-cols-[1fr_auto] wide:items-center">
+        <div>
+          <h2 id="experience-title" className="eyebrow text-champagne">
+            {copy.label}
+          </h2>
+          <p className="display mt-6 max-w-4xl text-[8vw] sm:text-5xl lg:text-6xl">{copy.intro}</p>
+          <ol className="mt-20 grid gap-14 lg:grid-cols-3 wide:grid-cols-1 wide:gap-10">
+            {copy.chapters.map((chapter) => (
+              <li key={chapter.word}>
+                <p className="display text-4xl lg:text-[3.1vw] wide:text-[3vw]">{chapter.word}</p>
+                <p className="mt-5 max-w-sm leading-relaxed text-ivory/75">{chapter.text}</p>
+              </li>
+            ))}
+          </ol>
+          <MediaTag status={media.status} labels={tags} note={media.note} className="mt-16" />
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element -- image fixe, proportions d'origine */}
+        <img
+          src={media.still}
+          alt=""
+          aria-hidden="true"
+          width={media.frames.width}
+          height={media.frames.height}
+          className="h-auto w-full max-w-md justify-self-center wide:h-[78svh] wide:w-auto"
+        />
       </div>
     </section>
   );

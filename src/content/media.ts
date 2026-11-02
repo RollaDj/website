@@ -34,44 +34,63 @@ export type ImageMedia = {
 
 export type VideoMedia = {
   src: string;
+  /** Version allégée pour mobile (facultative). */
+  mobileSrc?: string;
+  /** Première image (affichée avant la lecture). */
   poster: string;
+  /** Image fixe (dernière image, ou si les animations sont réduites). */
+  still?: string;
+  /** Proportions d'origine : une vidéo verticale n'est jamais recadrée sur ordinateur. */
+  orientation?: "portrait" | "landscape";
+  /** Lecture en boucle (sinon : lue une fois puis arrêtée sur la dernière image). */
+  loop?: boolean;
   status: MediaStatus;
   note: string;
 };
 
-/** Hero : vidéo de fond en boucle, sans son (scripts/prepare-media.sh hero). */
+/**
+ * Hero : vidéo de ROLLA (dossier Drive « Vidéos Hero », fichier 5.mp4) —
+ * arrivée face caméra, lunettes de soleil. Lue une fois, puis arrêtée sur la
+ * dernière image. Préparée avec : scripts/prepare-media.sh hero 5.mp4
+ */
 export const heroVideo: VideoMedia = {
   src: "/media/hero/hero.mp4",
+  mobileSrc: "/media/hero/hero-mobile.mp4",
   poster: "/media/hero/hero-poster.jpg",
-  status: "placeholder",
-  note: "Visuel abstrait généré (faisceaux, brume). À remplacer par une vidéo 16:9 de ROLLA, 8–15 s, en boucle.",
+  still: "/media/hero/hero-still.jpg",
+  orientation: "portrait",
+  loop: false,
+  status: "final",
+  note: "Source : 5.mp4 (4K vertical 2160×3840, 25 i/s, 7,2 s) → 1080×1920 et 720×1280.",
 };
 
 /**
- * « The Experience » : séquence synchronisée au scroll
- * (scripts/prepare-media.sh experience).
- * - ordinateur : vidéo optimisée pour le scrubbing ;
- * - mobile : séquence d'images (plus fluide sur téléphone).
+ * « The Experience » : séquence synchronisée au scroll — ROLLA à la trompette
+ * (dossier Drive « Vidéos Hero », fichier 4.mp4).
+ * Préparée avec : scripts/prepare-media.sh experience 4.mp4
+ * - ordinateur : vidéo optimisée pour le scrubbing (image-clé toutes les 4 images) ;
+ * - mobile : séquence de 120 images (plus fluide sur téléphone).
  * `cues` : début/fin de chaque mot (RHYTHM, TRUMPET, ENERGY) en fraction
- * (0 → 1) de la séquence. À ajuster selon les images de la vraie vidéo.
+ * (0 → 1) de la séquence.
  */
 export const experienceMedia = {
   video: "/media/experience/experience.mp4",
   poster: "/media/experience/experience-poster.jpg",
   still: "/media/experience/experience-still.jpg",
+  orientation: "portrait" as "portrait" | "landscape",
   frames: {
     path: (index: number) => `/media/experience/mobile/f${String(index).padStart(4, "0")}.webp`,
-    count: 90,
-    width: 540,
-    height: 960,
+    count: 120,
+    width: 720,
+    height: 1280,
   },
   cues: [
-    [0.11, 0.38],
-    [0.4, 0.67],
-    [0.7, 0.92],
+    [0.1, 0.37],
+    [0.4, 0.66],
+    [0.69, 0.92],
   ] as [number, number][],
-  status: "placeholder" as MediaStatus,
-  note: "Séquence abstraite générée en 3 temps (rythme, trompette, énergie). À remplacer par la vidéo de ROLLA.",
+  status: "final" as MediaStatus,
+  note: "Source : 4.mp4 (4K vertical 2160×3840, 25 i/s, 15,4 s) → 1080×1920 (ordinateur) et 120 images 720×1280 (mobile).",
 };
 
 /** Section « The Artist ». */

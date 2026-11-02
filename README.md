@@ -67,39 +67,58 @@ Chaque média porte un statut dans `src/content/media.ts`. Tant que
 
 | Emplacement | État actuel | À fournir |
 | --- | --- | --- |
-| Hero (vidéo de fond) | **Provisoire** : visuel abstrait généré (faisceaux, brume), aucune image de prestation | Vidéo 16:9 de ROLLA, 8–15 s, boucle, sans son |
-| The Experience (scroll) | **Provisoire** : séquence abstraite générée en 3 temps | Vidéo 16:9 (+ idéalement une version 9:16 pour mobile), 15–25 s |
+| Hero | ✅ **Définitif** : `5.mp4` (dossier Drive « Vidéos Hero ») — arrivée face caméra, lunettes. 4K vertical → 1080×1920 (+ 720×1280 mobile) | — |
+| The Experience (scroll) | ✅ **Définitif** : `4.mp4` (dossier Drive « Vidéos Hero ») — ROLLA à la trompette. 4K vertical → 1080×1920 (scrub) + 120 images 720×1280 (mobile) | Plus tard, éventuellement : un plan DJ pour « THE RHYTHM » |
 | Portrait « The Artist » | Vraie photo du site actuel, 950 px | Portrait artistique HD (≥ 2000 px) |
 | Visuels des 3 formats | Vraies photos du site actuel, 600 px de haut | Photos HD : DJ set, DJ × trompette, avec musiciens |
 | Selected Performances | 3 vrais extraits du site actuel (720 px, filigrane Instagram sur l’un d’eux) + **3 emplacements réservés** | Extraits clubs/hôtels, événement de marque, musiciens invités |
 | Page Mariages (en-tête) | Vraie photo du site actuel, 600 px de haut | Photo HD de mariage |
-| Image de partage (`public/og-image.jpg`) | Générée à partir du hero provisoire | À régénérer avec les vrais visuels |
+| Image de partage (`public/og-image.jpg`) | Capture du hero avec la vraie vidéo | — |
 
-Aucune image ne représente ROLLA sans être une vraie photo de lui. Les visuels
-abstraits ne figurent aucune prestation.
+Aucune vidéo fictive n’est utilisée : le hero et la séquence au scroll
+utilisent les vraies vidéos de ROLLA.
+
+### Vidéos verticales
+
+Les vidéos 9:16 gardent leurs proportions :
+
+- **Écran large (paysage)** : vidéo entière dans un cadre 9:16 à droite, sans
+  aucun recadrage. Le texte est à gauche, sur un fond d’ambiance flouté. Le
+  hero et la séquence au scroll partagent le même cadre, d’où une continuité
+  visuelle.
+- **Écran en hauteur (mobile, tablette)** : vidéo en plein cadre. Seuls les
+  bords latéraux sont légèrement rognés sur les téléphones plus allongés que
+  9:16.
+- Le script choisit la mise en page selon `orientation` dans
+  `src/content/media.ts`. Une future vidéo horizontale s’affichera en plein
+  écran sur ordinateur.
 
 ### Remplacer les vidéos
 
 ```bash
-# Vidéo du hero
-./scripts/prepare-media.sh hero ma-video-hero.mp4
+# Vidéo du hero (lue une fois, puis arrêtée sur la dernière image)
+./scripts/prepare-media.sh hero 5.mp4
 
-# Séquence synchronisée au scroll (vidéo 16:9, version verticale facultative)
-./scripts/prepare-media.sh experience ma-video-16x9.mp4 ma-video-9x16.mp4
+# Séquence synchronisée au scroll (version mobile séparée facultative)
+./scripts/prepare-media.sh experience 4.mp4
 ```
 
-Le script (ffmpeg) produit :
+Le script (ffmpeg) respecte les proportions et la cadence d’origine, ne
+recadre pas, n’agrandit jamais et retire le son. Il produit :
 
-- une vidéo ordinateur optimisée pour le scrubbing (images-clés toutes les
-  4 images, sans B-frames, sans son) ;
-- une séquence d’images WebP pour mobile, plus fluide que la vidéo sur
-  téléphone ;
-- l’image d’attente et une image fixe pour le mode « animations réduites ».
+- pour le hero : une version ordinateur (côté le plus long ≤ 1920 px), une
+  version mobile (≤ 1280 px), la première et la dernière image ;
+- pour le scroll : une vidéo optimisée pour le scrubbing (une image-clé
+  toutes les 4 images, sans B-frames ; les vidéos de caméra n’en ont qu’une
+  toutes les 2 s environ) ;
+- pour le mobile : une séquence de 120 images WebP, plus fluide que la vidéo
+  sur téléphone ;
+- l’image fixe affichée en mode « animations réduites ».
 
 Ensuite, dans `src/content/media.ts` :
 
 1. passer `status` à `"final"` ;
-2. reporter le nombre d’images mobile ;
+2. reporter le nombre et la taille des images mobile ;
 3. ajuster `cues`, c’est-à-dire les moments (de 0 à 1) où apparaissent
    RHYTHM / TRUMPET / ENERGY, pour les caler sur les images.
 
@@ -177,7 +196,8 @@ seulement avec votre accord :
 
 ## À compléter avant la mise en ligne
 
-- [ ] Médias définitifs (tableau ci-dessus), puis `SHOW_MEDIA_TAGS = false`
+- [x] Vidéos du hero et de la séquence au scroll
+- [ ] Photos HD et vidéos de la galerie (tableau ci-dessus), puis `SHOW_MEDIA_TAGS = false`
 - [ ] Mentions légales : éditeur, SIRET, adresse, directeur de publication
 - [ ] Configuration Resend (formulaire)
 - [ ] Relecture des textes FR / EN
