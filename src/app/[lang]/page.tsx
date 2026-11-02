@@ -9,7 +9,7 @@ import { Hero } from "@/components/home/hero";
 import { Performances } from "@/components/home/performances";
 import { TrustedBy } from "@/components/home/trusted-by";
 import { PageShell } from "@/components/layout/page-shell";
-import { heroVideo } from "@/content/media";
+import { heroCutout } from "@/content/media";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { artistJsonLd, buildMetadata, JsonLd } from "@/lib/seo";
 
@@ -24,7 +24,7 @@ export default async function HomePage() {
 
   return (
     <PageShell locale={locale} page="home" dict={dict}>
-      <Hero hero={dict.hero} tags={dict.mediaTag} video={heroVideo} />
+      <Hero locale={locale} hero={dict.hero} tags={dict.mediaTag} cutout={heroCutout} />
       <Experience copy={dict.experience} tags={dict.mediaTag} />
       <Artist locale={locale} dict={dict} />
       <Formats locale={locale} formats={dict.formats} tags={dict.mediaTag} />

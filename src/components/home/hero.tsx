@@ -1,41 +1,28 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 import { ButtonLink, Arrow } from "@/components/ui/button-link";
+import { CutoutVideo } from "@/components/ui/cutout-video";
 import { MediaTag } from "@/components/ui/media-tag";
-import type { VideoMedia } from "@/content/media";
+import type { CutoutMedia } from "@/content/media";
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
 
 type Props = {
+  locale: Locale;
   hero: Dictionary["hero"];
   tags: Dictionary["mediaTag"];
-  video: VideoMedia;
+  cutout: CutoutMedia;
 };
 
 /**
- * HERO — vidéo de ROLLA, sans son.
- * Vidéo verticale : sur écran large, présentée entière dans un cadre 9:16
- * (aucun recadrage), sur fond d'ambiance flouté ; sur mobile, plein cadre.
+ * HERO — ROLLA détouré, en grand, devant le titre géant (effet de profondeur).
+ * Montage : arrivée face caméra (une fois), puis boucle à la trompette.
  */
-export function Hero({ hero, tags, video }: Props) {
+export function Hero({ locale, hero, tags, cutout }: Props) {
   const root = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const portrait = video.orientation === "portrait";
-
-  // Lecture lancée par le script (jamais si le visiteur limite les animations :
-  // l'image finale est alors affichée).
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      if (video.still) v.poster = video.still;
-      return;
-    }
-    const start = window.setTimeout(() => v.play().catch(() => {}), 350);
-    return () => window.clearTimeout(start);
-  }, [video.still]);
 
   useGSAP(
     () => {
@@ -43,23 +30,25 @@ export function Hero({ hero, tags, video }: Props) {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const split = SplitText.create("[data-hero-title]", { type: "words,chars", mask: "chars", charsClass: "char" });
 
-        // Ouverture
+        // Ouverture : projecteur, titre, puis l'artiste qui entre en scène.
         gsap
           .timeline({ defaults: { ease: "expo.out" } })
-          .fromTo("[data-hero-media]", { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 2.4 }, 0)
-          .fromTo("[data-hero-ambient]", { opacity: 0 }, { opacity: 1, duration: 2.4 }, 0.2)
-          .fromTo("[data-hero-title]", { opacity: 0 }, { opacity: 1, duration: 0.01 }, 0.2)
-          .from(split.chars, { yPercent: 125, duration: 1.6, stagger: 0.07 }, 0.2)
-          .fromTo("[data-hero-fade]", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1.4, stagger: 0.08 }, 0.9);
+          .fromTo("[data-hero-glow]", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 2.6 }, 0)
+          .fromTo("[data-hero-title]", { opacity: 0 }, { opacity: 1, duration: 0.01 }, 0.15)
+          .from(split.chars, { yPercent: 125, duration: 1.6, stagger: 0.07 }, 0.15)
+          .fromTo("[data-hero-media]", { opacity: 0, yPercent: 4 }, { opacity: 1, yPercent: 0, duration: 2.2 }, 0.35)
+          .fromTo("[data-hero-fade]", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1.4, stagger: 0.08 }, 1);
 
-        // Sortie au défilement : le texte s'élève, l'image s'éloigne.
+        // Sortie au défilement : profondeur (le titre file plus vite que l'artiste).
         gsap
           .timeline({
             scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true },
             defaults: { ease: "none" },
           })
-          .to("[data-hero-content]", { yPercent: -18, opacity: 0 }, 0)
-          .to("[data-hero-media]", { yPercent: 8, opacity: 0.4 }, 0);
+          .to("[data-hero-title]", { yPercent: -45 }, 0)
+          .to("[data-hero-media]", { yPercent: 8, scale: 1.04 }, 0)
+          .to("[data-hero-content]", { yPercent: -16, opacity: 0 }, 0)
+          .to("[data-hero-glow]", { opacity: 0 }, 0);
       });
     },
     { scope: root },
@@ -70,92 +59,78 @@ export function Hero({ hero, tags, video }: Props) {
       ref={root}
       id="top"
       aria-labelledby="hero-title"
-      className="relative isolate h-svh min-h-[600px] overflow-hidden bg-noir"
+      className="relative isolate h-svh min-h-[640px] overflow-hidden bg-noir"
     >
-      {/* Ambiance (écran large) : la dernière image, très floutée */}
-      {portrait && video.still && (
-        <div data-hero-ambient data-intro aria-hidden="true" className="absolute inset-0 -z-20 hidden wide:block">
-          {/* eslint-disable-next-line @next/next/no-img-element -- fond décoratif flouté */}
-          <img src={video.still} alt="" className="h-full w-full scale-110 object-cover opacity-30 blur-3xl" />
-          <div className="absolute inset-0 bg-gradient-to-r from-noir via-noir/80 to-noir/40" />
-        </div>
-      )}
+      {/* Projecteur */}
+      <div
+        data-hero-glow
+        data-intro
+        aria-hidden="true"
+        className="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_38%_55%_at_50%_48%,rgba(198,173,134,0.24),rgba(198,173,134,0.06)_50%,transparent_75%)] max-sm:bg-[radial-gradient(ellipse_70%_50%_at_50%_45%,rgba(198,173,134,0.24),rgba(198,173,134,0.06)_50%,transparent_78%)]"
+      />
 
-      {/* Vidéo (sans son) */}
+      {/* Titre géant, derrière l'artiste */}
+      <h1
+        id="hero-title"
+        data-hero-title
+        data-intro
+        className="display absolute inset-x-0 top-[31%] -z-20 select-none text-center text-[calc((100vw-2.5rem)/4.1)] leading-[0.78] tracking-[-0.04em] text-ivory sm:text-[calc((100vw-4rem)/4.1)] lg:top-[29%] lg:text-[calc((100vw-6rem)/4.1)]"
+      >
+        ROLLA
+      </h1>
+
+      {/* ROLLA détouré */}
       <div
         data-hero-media
         data-intro
-        className={`absolute inset-0 -z-10 ${
-          portrait
-            ? "wide:inset-auto wide:bottom-10 wide:right-[var(--frame-right)] wide:top-24 wide:w-[var(--frame-w)] wide:overflow-hidden"
-            : ""
-        }`}
+        className="absolute bottom-0 left-1/2 -z-10 aspect-[9/16] h-[106svh] -translate-x-1/2 sm:h-[112svh] lg:h-[122svh]"
       >
-        <video
-          ref={videoRef}
-          poster={video.poster}
-          muted
-          loop={video.loop ?? true}
-          playsInline
-          preload="auto"
-          aria-hidden="true"
-          tabIndex={-1}
-          className="h-full w-full object-cover object-[center_30%]"
-        >
-          {video.mobileSrc && <source src={video.mobileSrc} type="video/mp4" media="(max-width: 767px)" />}
-          <source src={video.src} type="video/mp4" />
-        </video>
-        {/* Lisibilité du texte en plein cadre (vidéo tournée en extérieur, très lumineuse) */}
-        <div className={portrait ? "wide:hidden" : ""}>
-          <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-noir/75 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-[68%] bg-gradient-to-t from-noir via-noir/75 to-transparent" />
-        </div>
-        {portrait && <div className="absolute inset-0 hidden ring-1 ring-inset ring-ivory/10 wide:block" />}
+        <CutoutVideo
+          src={cutout.src}
+          mobileSrc={cutout.mobileSrc}
+          poster={cutout.poster}
+          still={cutout.still}
+          loopStart={cutout.loopStart}
+          alt={cutout.alt[locale]}
+          className="h-full w-full"
+        />
       </div>
 
+      {/* Lisibilité du texte en bas d'écran */}
       <div
-        data-hero-content
-        className={`flex h-full flex-col px-5 pb-8 pt-24 sm:px-8 lg:px-12 lg:pb-10 lg:pt-28 ${
-          portrait ? "wide:pr-[calc(var(--frame-right)+var(--frame-w)+3rem)]" : ""
-        }`}
-      >
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[56%] bg-gradient-to-t from-noir via-noir/80 to-transparent lg:h-[34%] lg:via-noir/70"
+      />
+
+      <div data-hero-content className="relative flex h-full flex-col px-5 pb-8 pt-24 sm:px-8 lg:px-12 lg:pb-10 lg:pt-28">
         <div className="flex items-start justify-between gap-6">
           <p data-hero-fade data-intro className="eyebrow text-ivory/70">
             {hero.kicker}
           </p>
           <div data-hero-fade data-intro>
-            <MediaTag status={video.status} labels={tags} note={video.note} />
+            <MediaTag status={cutout.status} labels={tags} note={cutout.note} />
           </div>
         </div>
 
         <div className="flex-1" />
 
-        <h1
-          id="hero-title"
-          data-hero-title
-          data-intro
-          className={`display -ml-[0.04em] text-[calc((100vw-2.5rem)/4.1)] leading-[0.78] tracking-[-0.04em] text-ivory sm:text-[calc((100vw-4rem)/4.1)] lg:text-[calc((100vw-6rem)/4.1)] ${
-            portrait ? "wide:text-[calc((100vw-var(--frame-w)-var(--frame-right)-6rem)/4.15)]" : ""
-          }`}
-        >
-          ROLLA
-        </h1>
-
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 sm:items-end lg:mt-10">
-          <p data-hero-fade data-intro className="display text-2xl leading-[0.95] sm:text-3xl xl:text-4xl">
-            {hero.subtitleA}
-            <br />
-            <span className="text-champagne">{hero.subtitleB}</span>
-          </p>
-          <p data-hero-fade data-intro className="max-w-xs text-base leading-relaxed text-ivory/75">
-            {hero.line}
-          </p>
-          <div data-hero-fade data-intro className="flex flex-wrap gap-3 sm:col-span-2">
+        <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-4">
+            <p data-hero-fade data-intro className="display text-2xl leading-[0.95] sm:text-3xl xl:text-4xl">
+              {hero.subtitleA}
+              <br />
+              <span className="text-champagne">{hero.subtitleB}</span>
+            </p>
+            <p data-hero-fade data-intro className="mt-4 max-w-xs text-sm leading-relaxed text-ivory/75 sm:text-base">
+              {hero.line}
+            </p>
+          </div>
+          <div data-hero-fade data-intro className="flex flex-wrap gap-3 lg:col-span-4 lg:col-start-9 lg:justify-end">
             <ButtonLink href="#experience">
               {hero.discover}
               <Arrow />
             </ButtonLink>
-            <ButtonLink href="#contact" variant="ghost">
+            <ButtonLink href="#contact" variant="ghost" className="bg-noir/40 backdrop-blur-sm">
               {hero.book}
             </ButtonLink>
           </div>

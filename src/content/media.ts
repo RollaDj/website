@@ -49,19 +49,41 @@ export type VideoMedia = {
 };
 
 /**
- * Hero : vidéo de ROLLA (dossier Drive « Vidéos Hero », fichier 5.mp4) —
- * arrivée face caméra, lunettes de soleil. Lue une fois, puis arrêtée sur la
- * dernière image. Préparée avec : scripts/prepare-media.sh hero 5.mp4
+ * Vidéo détourée (fond transparent) : fichier « côte à côte » — couleur à
+ * gauche, transparence à droite — recomposé en WebGL (compatible tous
+ * navigateurs, Safari compris). Voir src/components/ui/cutout-video.tsx.
  */
-export const heroVideo: VideoMedia = {
-  src: "/media/hero/hero.mp4",
-  mobileSrc: "/media/hero/hero-mobile.mp4",
-  poster: "/media/hero/hero-poster.jpg",
-  still: "/media/hero/hero-still.jpg",
-  orientation: "portrait",
-  loop: false,
+export type CutoutMedia = {
+  src: string;
+  mobileSrc?: string;
+  /** Première image détourée (WebP transparent). */
+  poster: string;
+  /** Image fixe détourée (animations réduites). */
+  still: string;
+  /** Début de la boucle (s) : l'introduction n'est jouée qu'une fois. */
+  loopStart: number;
+  alt: Localized;
+  status: MediaStatus;
+  note: string;
+};
+
+/**
+ * Hero : ROLLA détouré, en grand. Montage de deux vidéos du dossier Drive
+ * « Vidéos Hero » : arrivée face caméra et lunettes (5.mp4), raccord fondu,
+ * puis boucle à la trompette (4.mp4) dont la fin se fond dans le début.
+ */
+export const heroCutout: CutoutMedia = {
+  src: "/media/hero/rolla-cutout.mp4",
+  mobileSrc: "/media/hero/rolla-cutout-mobile.mp4",
+  poster: "/media/hero/rolla-cutout-poster.webp",
+  still: "/media/hero/rolla-cutout-still.webp",
+  loopStart: 5.68,
+  alt: {
+    fr: "ROLLA s’avance, met ses lunettes de soleil puis joue de la trompette",
+    en: "ROLLA walks in, puts on his sunglasses, then plays the trumpet",
+  },
   status: "final",
-  note: "Source : 5.mp4 (4K vertical 2160×3840, 25 i/s, 7,2 s) → 1080×1920 et 720×1280.",
+  note: "Détourage (Robust Video Matting) et montage de 5.mp4 + 4.mp4 ; 1080×1920 (+ 720×1280 mobile).",
 };
 
 /**

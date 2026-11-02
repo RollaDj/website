@@ -67,7 +67,7 @@ Chaque média porte un statut dans `src/content/media.ts`. Tant que
 
 | Emplacement | État actuel | À fournir |
 | --- | --- | --- |
-| Hero | ✅ **Définitif** : `5.mp4` (dossier Drive « Vidéos Hero ») — arrivée face caméra, lunettes. 4K vertical → 1080×1920 (+ 720×1280 mobile) | — |
+| Hero | ✅ **Définitif** : ROLLA **détouré** (fond transparent), montage de `5.mp4` (arrivée, lunettes) + `4.mp4` (trompette, en boucle) | — |
 | The Experience (scroll) | ✅ **Définitif** : `4.mp4` (dossier Drive « Vidéos Hero ») — ROLLA à la trompette. 4K vertical → 1080×1920 (scrub) + 120 images 720×1280 (mobile) | Plus tard, éventuellement : un plan DJ pour « THE RHYTHM » |
 | Portrait « The Artist » | Vraie photo du site actuel, 950 px | Portrait artistique HD (≥ 2000 px) |
 | Visuels des 3 formats | Vraies photos du site actuel, 600 px de haut | Photos HD : DJ set, DJ × trompette, avec musiciens |
@@ -77,6 +77,26 @@ Chaque média porte un statut dans `src/content/media.ts`. Tant que
 
 Aucune vidéo fictive n’est utilisée : le hero et la séquence au scroll
 utilisent les vraies vidéos de ROLLA.
+
+### Hero détouré
+
+ROLLA apparaît en grand, sans fond, devant le titre géant (effet de
+profondeur), sur un halo champagne.
+
+- **Détourage** : [Robust Video Matting](https://github.com/PeterL1n/RobustVideoMatting)
+  (modèle ResNet-50), image par image, avec continuité temporelle (pas de
+  scintillement). La trompette est conservée. À l’intérieur de la
+  silhouette, ce sont les couleurs d’origine.
+- **Montage** : arrivée face caméra et mise des lunettes (5.mp4, 5 s), raccord
+  fondu où la silhouette de la trompette part de la même taille et de la même
+  position, puis boucle à la trompette (4.mp4) dont la fin se fond dans le
+  début. L’introduction n’est jouée qu’une fois.
+- **Format** : vidéo H.264 « côte à côte » (couleur à gauche, transparence à
+  droite) recomposée en WebGL par `src/components/ui/cutout-video.tsx`. Ce
+  format fonctionne sur tous les navigateurs, Safari et iPhone compris, ce que
+  ne permet pas une vidéo WebM transparente. Une image WebP transparente
+  s’affiche avant la lecture, ou à la place de la vidéo si les animations sont
+  réduites.
 
 ### Vidéos verticales
 
