@@ -15,7 +15,17 @@ export type CutoutVideoSource = {
   loopStart: number;
 };
 
-type Props = CutoutVideoSource & { className?: string; alt: string };
+type Props = CutoutVideoSource & {
+  className?: string;
+  alt: string;
+  /** Position de départ (s) : `loopStart` pour commencer directement par la boucle. */
+  startAt?: number;
+  /**
+   * "play" : lecture (si visible) ; "pause" : arrêt sur l'image en cours ;
+   * "reset" : arrêt et retour à `startAt` (image de calage).
+   */
+  playback?: "play" | "pause" | "reset";
+};
 
 const VERTEX = `
 attribute vec2 p;
@@ -40,13 +50,31 @@ void main() {
 /**
  * Vidéo détourée (fond transparent), rendue en WebGL.
  * L'introduction est jouée une fois, puis la boucle repart de `loopStart`.
- * Lecture suspendue hors écran ; image fixe si les animations sont réduites.
+ * Lecture suspendue hors écran (ou selon `playback`) ; image fixe si les
+ * animations sont réduites.
  */
-export function CutoutVideo({ src, mobileSrc, poster, still, loopStart, className = "", alt }: Props) {
+export function CutoutVideo({
+  src,
+  mobileSrc,
+  poster,
+  still,
+  loopStart,
+  startAt = 0,
+  playback = "play",
+  className = "",
+  alt,
+}: Props) {
   const wrap = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+  const playbackRef = useRef(playback);
+  const syncRef = useRef<() => void>(() => {});
+
+  useEffect(() => {
+    playbackRef.current = playback;
+    syncRef.current();
+  }, [playback]);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
@@ -152,22 +180,44 @@ export function CutoutVideo({ src, mobileSrc, poster, still, loopStart, classNam
     video.addEventListener("ended", onEnded);
 
     video.src = mobileSrc && window.matchMedia("(max-width: 767px)").matches ? mobileSrc : src;
+    const onMetadata = () => {
+      if (startAt > 0) video.currentTime = startAt;
+    };
+    // Image affichée dès qu'elle est prête, même en pause (fondu sans « trou »).
     const onReady = () => draw();
+    video.addEventListener("loadedmetadata", onMetadata);
     video.addEventListener("loadeddata", onReady);
+    video.addEventListener("seeked", onReady);
 
-    const observer = new IntersectionObserver(([entry]) => (entry.isIntersecting ? start() : stop()));
+    let visible = false;
+    const sync = () => {
+      const mode = playbackRef.current;
+      if (mode === "play" && visible) return start();
+      stop();
+      if (mode === "reset" && video.readyState >= 1 && Math.abs(video.currentTime - startAt) > 0.04) {
+        video.currentTime = startAt;
+      }
+    };
+    syncRef.current = sync;
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      sync();
+    });
     observer.observe(wrap.current!);
 
     return () => {
+      syncRef.current = () => {};
       observer.disconnect();
       resizeObserver.disconnect();
       stop();
       video.removeEventListener("ended", onEnded);
+      video.removeEventListener("loadedmetadata", onMetadata);
       video.removeEventListener("loadeddata", onReady);
+      video.removeEventListener("seeked", onReady);
       video.removeAttribute("src");
       video.load();
     };
-  }, [src, mobileSrc, still, loopStart]);
+  }, [src, mobileSrc, still, loopStart, startAt]);
 
   return (
     <div ref={wrap} className={`relative ${className}`}>
