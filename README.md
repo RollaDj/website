@@ -67,8 +67,7 @@ Chaque média porte un statut dans `src/content/media.ts`. Tant que
 
 | Emplacement | État actuel | À fournir |
 | --- | --- | --- |
-| Hero — trompette | ✅ **Définitif** : ROLLA **détouré** (fond transparent), boucle trompette de `4.mp4` (montage `5.mp4` + `4.mp4`) | — |
-| Hero — platines (1re image) | ⚠️ **Provisoire** : photo du site actuel (591 × 600 px), détourée | Photo HD derrière les platines, fond uni (voir « Hero : platines → trompette ») |
+| Hero | ✅ **Définitif** : ROLLA **détouré** (fond transparent), montage de `5.mp4` (arrivée, lunettes) + `4.mp4` (trompette, en boucle) | — |
 | The Experience (scroll) | ✅ **Définitif** : `4.mp4` (dossier Drive « Vidéos Hero ») — ROLLA à la trompette. 4K vertical → 1080×1920 (scrub) + 120 images 720×1280 (mobile) | Plus tard, éventuellement : un plan DJ pour « THE RHYTHM » |
 | Portrait « The Artist » | Vraie photo du site actuel, 950 px | Portrait artistique HD (≥ 2000 px) |
 | Visuels des 3 formats | Vraies photos du site actuel, 600 px de haut | Photos HD : DJ set, DJ × trompette, avec musiciens |
@@ -111,47 +110,13 @@ du bas.
 - **Montage** : arrivée face caméra et mise des lunettes (5.mp4, 5 s), raccord
   fondu où la silhouette de la trompette part de la même taille et de la même
   position, puis boucle à la trompette (4.mp4) dont la fin se fond dans le
-  début. Le hero commence désormais directement par la boucle (après la
-  photo « platines ») ; le fichier contient toujours l’arrivée.
+  début. L’introduction n’est jouée qu’une fois.
 - **Format** : vidéo H.264 « côte à côte » (couleur à gauche, transparence à
   droite) recomposée en WebGL par `src/components/ui/cutout-video.tsx`. Ce
   format fonctionne sur tous les navigateurs, Safari et iPhone compris, ce que
   ne permet pas une vidéo WebM transparente. Une image WebP transparente
   s’affiche avant la lecture, ou à la place de la vidéo si les animations sont
   réduites.
-
-### Hero : platines → trompette
-
-Au chargement, le hero montre ROLLA **derrière ses platines** (photo
-détourée). Au défilement, l’image reste en place le temps d’un écran et se
-fond dans ROLLA **à la trompette** (la vidéo détourée ci-dessus) :
-
-- la photo est calée sur l’image de début de boucle de la vidéo : les deux
-  têtes se superposent (à 90 %), comme un seul plan qui se transforme ;
-- les deux images partagent un même plan, qui avance vers l’artiste pendant
-  le fondu. Au départ, le plan est plus large (60 % sur mobile, 78 % sur
-  tablette, 88 % sur ordinateur) pour que les platines restent au-dessus du
-  texte. Un léger halo chaud accompagne le fondu ;
-- la vidéo reste figée sur l’image de calage pendant le fondu, puis s’anime ;
-- le défilement est réversible. Si les animations sont réduites (ou sans
-  JavaScript), le hero montre directement la trompette, sans défilement
-  supplémentaire.
-
-La photo actuelle vient du site actuel (591 × 600 px) : elle est un peu
-douce en grand, d’où l’étiquette « média à remplacer ». **Pour la remplacer**
-par une photo HD (idéalement ≥ 1600 px de haut, fond uni et clair, cadrée de
-la tête au contrôleur, de face) :
-
-```bash
-pip install numpy opencv-python-headless onnxruntime
-python3 scripts/hero-decks.py ma-photo.jpg --model rvm_resnet50_fp32.onnx
-```
-
-Le modèle `rvm_resnet50_fp32.onnx` se télécharge sur la page de
-[Robust Video Matting](https://github.com/PeterL1n/RobustVideoMatting). Le
-script écrit `public/media/hero/rolla-decks.webp` et affiche les valeurs
-`width`, `height` et `fit` à reporter dans `heroDecks`
-(`src/content/media.ts`).
 
 ### Vidéos verticales
 
@@ -272,7 +237,6 @@ seulement avec votre accord :
 ## À compléter avant la mise en ligne
 
 - [x] Vidéos du hero et de la séquence au scroll
-- [ ] Photo HD derrière les platines pour le hero (`scripts/hero-decks.py`)
 - [ ] Photos HD et vidéos de la galerie (tableau ci-dessus), puis `SHOW_MEDIA_TAGS = false`
 - [ ] Mentions légales : éditeur, SIRET, adresse, directeur de publication
 - [ ] Configuration Resend (formulaire)

@@ -62,8 +62,6 @@ export type CutoutMedia = {
   still: string;
   /** Début de la boucle (s) : l'introduction n'est jouée qu'une fois. */
   loopStart: number;
-  /** Image détourée du début de la boucle (affichée avant la lecture). */
-  loopPoster: string;
   alt: Localized;
   status: MediaStatus;
   note: string;
@@ -80,39 +78,12 @@ export const heroCutout: CutoutMedia = {
   poster: "/media/hero/rolla-cutout-poster.webp",
   still: "/media/hero/rolla-cutout-still.webp",
   loopStart: 5.68,
-  loopPoster: "/media/hero/rolla-cutout-loop.webp",
   alt: {
     fr: "ROLLA s’avance, met ses lunettes de soleil puis joue de la trompette",
     en: "ROLLA walks in, puts on his sunglasses, then plays the trumpet",
   },
   status: "final",
   note: "Détourage (Robust Video Matting) et montage de 5.mp4 + 4.mp4 ; 1080×1920 (+ 720×1280 mobile).",
-};
-
-/**
- * Hero, première image : ROLLA derrière ses platines (photo détourée).
- * Au défilement, elle se fond dans la vidéo détourée à la trompette
- * (`heroCutout`, début de la boucle), les deux têtes superposées.
- * Pour la remplacer : `python3 scripts/hero-decks.py photo.jpg --model …`
- * (détourage, export, calage), puis reporter `width`, `height` et `fit`
- * affichés (voir README, « Hero : platines → trompette »).
- */
-export const heroDecks = {
-  src: "/media/hero/rolla-decks.webp",
-  width: 591,
-  height: 600,
-  /**
-   * Calage sur l'image de début de boucle de la vidéo trompette, en fractions
-   * du cadre vidéo (9:16) : largeur de la photo, position de son bord gauche
-   * et de son bord haut. Têtes superposées à 90 % (IoU).
-   */
-  fit: { width: 1.34, left: -0.15, top: 0.1861 },
-  alt: {
-    fr: "ROLLA derrière ses platines, casque autour du cou",
-    en: "ROLLA behind the decks, headphones around his neck",
-  } satisfies Localized,
-  status: "temporary" as MediaStatus,
-  note: "Photo du site actuel (591 × 600 px), détourée. Remplacer par une photo HD derrière les platines (≥ 1600 px de haut, fond uni).",
 };
 
 /**
