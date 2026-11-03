@@ -94,6 +94,17 @@ const fr = {
     ],
   },
 
+  gallery: {
+    label: "En images",
+    title: "Chaque scène, une autre énergie.",
+    intro: "Sur scène, au milieu des invités ou face aux sommets : quelques moments en live, en photos.",
+    hintScroll: "Faites défiler",
+    hintSwipe: "Faites glisser",
+    scrollerLabel: "Photos de ROLLA en live (défilement horizontal)",
+    endTitle: "La prochaine, à votre événement ?",
+    endCta: "Réserver ROLLA",
+  },
+
   formats: {
     label: "Formats live",
     title: "Trois formats. Une même énergie.",
@@ -246,6 +257,7 @@ const fr = {
         text: "Un DJ set construit autour de vos envies, porté par la trompette en live jusqu’au bout de la nuit.",
       },
     ],
+    photosTitle: "Mariages en images",
     formatsTitle: "Les formules",
     formats: [
       { name: "DJ", text: "Programmation sur mesure et DJ set pour la soirée." },

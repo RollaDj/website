@@ -68,7 +68,7 @@ export function Formats({ locale, formats, tags }: Props) {
       <div className="mx-auto max-w-[1680px] px-5 py-28 sm:px-8 lg:px-12 lg:py-40">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-8">
-            <SectionLabel index="03">{formats.label}</SectionLabel>
+            <SectionLabel index="04">{formats.label}</SectionLabel>
             <h2 id="formats-title" data-split className="display mt-8 text-[8.2vw] text-balance sm:text-5xl lg:text-6xl xl:text-7xl">
               {formats.title}
             </h2>
@@ -108,7 +108,7 @@ export function Formats({ locale, formats, tags }: Props) {
                 </PrefillLink>
                 {/* Visuel mobile / tablette */}
                 <div className="relative mb-10 aspect-[4/5] overflow-hidden bg-anthracite sm:aspect-[16/10] lg:hidden">
-                  <Image src={media.image} alt={media.alt[locale]} fill sizes="100vw" className="tone object-cover" />
+                  <Image src={media.image} alt={media.alt[locale]} fill sizes="100vw" className="tone object-cover" style={{ objectPosition: media.focus }} />
                   <MediaTag status={media.status} labels={tags} note={media.note} className="absolute left-3 top-3" />
                 </div>
               </li>
@@ -130,7 +130,7 @@ export function Formats({ locale, formats, tags }: Props) {
               key={item.id}
               className={`absolute inset-0 transition-opacity duration-500 ${active === i ? "opacity-100" : "opacity-0"}`}
             >
-              <Image src={media.image} alt="" fill sizes="22vw" className="tone object-cover" />
+              <Image src={media.image} alt="" fill sizes="22vw" className="tone object-cover" style={{ objectPosition: media.focus }} />
             </div>
           );
         })}

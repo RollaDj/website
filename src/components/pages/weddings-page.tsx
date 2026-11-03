@@ -4,7 +4,7 @@ import { ContactSection } from "@/components/contact/contact-section";
 import { ButtonLink, Arrow } from "@/components/ui/button-link";
 import { MediaTag } from "@/components/ui/media-tag";
 import { SectionLabel } from "@/components/ui/section-label";
-import { weddingsHeroMedia } from "@/content/media";
+import { weddingsHeroMedia, weddingsPhotos } from "@/content/media";
 import { WEDDING_TESTIMONIALS, WEDDING_TESTIMONIALS_SOURCE } from "@/content/testimonials";
 import { localeMeta, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -31,7 +31,7 @@ export function WeddingsPage({ locale, dict }: Props) {
       {/* En-tête */}
       <section className="relative isolate flex min-h-[88svh] flex-col justify-end overflow-hidden px-5 pb-14 pt-32 sm:px-8 lg:px-12 lg:pb-20">
         <div className="absolute inset-0 -z-10">
-          <Image src={media.image} alt={media.alt[locale]} fill priority sizes="100vw" className="tone object-cover object-[center_30%]" />
+          <Image src={media.image} alt={media.alt[locale]} fill priority sizes="100vw" className="tone object-cover" style={{ objectPosition: media.focus }} />
           <div className="absolute inset-0 bg-gradient-to-t from-noir via-noir/60 to-noir/30" />
         </div>
         <MediaTag status={media.status} labels={dict.mediaTag} note={media.note} className="absolute right-5 top-24 sm:right-8 lg:right-12" />
@@ -67,6 +67,40 @@ export function WeddingsPage({ locale, dict }: Props) {
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      {/* En images : trois moments, en couleur */}
+      <section aria-labelledby="wedding-photos-title" className="border-t border-ivory/10">
+        <h2 id="wedding-photos-title" className="sr-only">
+          {t.photosTitle}
+        </h2>
+        <div className="mx-auto grid max-w-[1680px] gap-5 px-5 py-24 sm:grid-cols-12 sm:items-end sm:gap-6 sm:px-8 lg:gap-8 lg:px-12 lg:py-36">
+          {weddingsPhotos.map((photo, i) => (
+            <figure
+              key={photo.image.src}
+              className={
+                ["sm:col-span-5 lg:col-span-4", "sm:col-span-7 lg:col-span-5 lg:mb-24", "sm:col-span-6 sm:col-start-4 lg:col-span-3 lg:col-start-auto"][i]
+              }
+            >
+              <div
+                data-reveal-image
+                className="relative overflow-hidden bg-anthracite"
+                style={{ aspectRatio: `${photo.image.width} / ${photo.image.height}` }}
+              >
+                <div data-parallax className="absolute inset-0">
+                  <Image
+                    src={photo.image}
+                    alt={photo.alt[locale]}
+                    fill
+                    sizes="(min-width: 1024px) 40vw, (min-width: 640px) 60vw, 100vw"
+                    className="object-cover"
+                    style={{ objectPosition: photo.focus }}
+                  />
+                </div>
+              </div>
+            </figure>
+          ))}
         </div>
       </section>
 

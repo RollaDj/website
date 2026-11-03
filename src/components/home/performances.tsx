@@ -26,7 +26,7 @@ export function Performances({ locale, copy, tags }: Props) {
       <div className="mx-auto max-w-[1680px] px-5 py-28 sm:px-8 lg:px-12 lg:py-40">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-8">
-            <SectionLabel index="04">{copy.label}</SectionLabel>
+            <SectionLabel index="05">{copy.label}</SectionLabel>
             <h2 id="performances-title" data-split className="display mt-8 text-[8.2vw] text-balance sm:text-5xl lg:text-[clamp(3rem,5vw,5.5rem)]">
               {copy.title}
             </h2>

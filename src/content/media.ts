@@ -1,10 +1,23 @@
 import type { StaticImageData } from "next/image";
 
-import artistPortrait from "@/assets/rolla-trompette-detoure.png";
-import djPlatines from "@/assets/photos/dj-platines.jpg";
-import trioCour from "@/assets/photos/trio-cour.jpg";
-import trioPleinAir from "@/assets/photos/trio-plein-air.jpg";
-import trompetteScene from "@/assets/photos/trompette-scene.jpg";
+import evenementInvitesDanse from "@/assets/photos/evenement-invites-danse.jpg";
+import evenementProjecteurs from "@/assets/photos/evenement-projecteurs.jpg";
+import evenementSceneEcran from "@/assets/photos/evenement-scene-ecran.jpg";
+import galerieAltitudePlatines from "@/assets/photos/galerie-altitude-platines.jpg";
+import galerieAltitudeTrompette from "@/assets/photos/galerie-altitude-trompette.jpg";
+import galerieCabineFenetres from "@/assets/photos/galerie-cabine-fenetres.jpg";
+import galerieCoeurFete from "@/assets/photos/galerie-coeur-fete.jpg";
+import galerieInvitesTrompette from "@/assets/photos/galerie-invites-trompette.jpg";
+import galeriePiste from "@/assets/photos/galerie-piste.jpg";
+import galerieSceneViolet from "@/assets/photos/galerie-scene-violet.jpg";
+import mariageAmbiance from "@/assets/photos/mariage-ambiance.jpg";
+import mariageInvitesTrompette from "@/assets/photos/mariage-invites-trompette.jpg";
+import mariageSourire from "@/assets/photos/mariage-sourire.jpg";
+import mariageTrompetteLive from "@/assets/photos/mariage-trompette-live.jpg";
+import rollaDuoSaxophone from "@/assets/photos/rolla-duo-saxophone.jpg";
+import rollaPlatinesFenetres from "@/assets/photos/rolla-platines-fenetres.jpg";
+import rollaTapisRouge from "@/assets/photos/rolla-tapis-rouge.jpg";
+import rollaTrompetteCabine from "@/assets/photos/rolla-trompette-cabine.jpg";
 
 /**
  * ─────────────────────────────────────────────────────────────────────────
@@ -30,7 +43,12 @@ export type ImageMedia = {
   alt: Localized;
   status: MediaStatus;
   note: string;
+  /** Point d'intérêt pour le recadrage (CSS object-position), ex. "50% 30%". */
+  focus?: string;
 };
+
+/** Photos fournies (dossier Drive « Photos ») : exportées en sRGB, sans métadonnées (GPS retiré), proportions d’origine. */
+const DRIVE = "Photo du dossier Drive « Photos »";
 
 export type VideoMedia = {
   src: string;
@@ -117,50 +135,190 @@ export const experienceMedia = {
 
 /** Section « The Artist ». */
 export const artistPortraitMedia: ImageMedia = {
-  image: artistPortrait,
+  image: rollaTapisRouge,
   alt: {
-    fr: "ROLLA à la trompette, en manteau ivoire, sur fond noir",
-    en: "ROLLA playing the trumpet in an ivory coat, on a black background",
+    fr: "ROLLA s’avance sur un tapis rouge, trompette à la main, souriant",
+    en: "ROLLA walking down a red carpet, trumpet in hand, smiling",
   },
-  status: "temporary",
-  note: "Photo du site actuel (950 px). Remplacer par un portrait artistique HD (≥ 2000 px).",
+  status: "final",
+  note: `${DRIVE} (8758_940429_131.jpg).`,
+  focus: "50% 35%",
 };
 
 /** Section « Live formats » : un visuel par format. */
 export const formatMedia: Record<"dj-set" | "dj-trumpet" | "dj-live", ImageMedia> = {
   "dj-set": {
-    image: djPlatines,
-    alt: { fr: "ROLLA aux platines", en: "ROLLA at the decks" },
-    status: "temporary",
-    note: "Photo du site actuel (600 px de haut). Remplacer par une photo HD de DJ set.",
+    image: rollaPlatinesFenetres,
+    alt: { fr: "ROLLA aux platines, souriant, devant de grandes fenêtres", en: "ROLLA at the decks, smiling, in front of tall windows" },
+    status: "final",
+    note: DRIVE,
+    focus: "50% 40%",
   },
   "dj-trumpet": {
-    image: trompetteScene,
-    alt: { fr: "ROLLA à la trompette sur scène", en: "ROLLA playing the trumpet on stage" },
-    status: "temporary",
-    note: "Photo du site actuel (600 px de haut). Remplacer par une photo HD DJ × trompette.",
+    image: rollaTrompetteCabine,
+    alt: { fr: "ROLLA joue de la trompette derrière sa cabine DJ", en: "ROLLA playing the trumpet behind his DJ booth" },
+    status: "final",
+    note: DRIVE,
+    focus: "45% 40%",
   },
   "dj-live": {
-    image: trioCour,
+    image: rollaDuoSaxophone,
     alt: {
-      fr: "Formation live avec saxophone et percussions",
-      en: "Live line-up with saxophone and percussion",
+      fr: "ROLLA, trompette à la main, aux côtés d’une saxophoniste",
+      en: "ROLLA with his trumpet, alongside a saxophonist",
     },
-    status: "temporary",
-    note: "Photo du site actuel (600 px de haut). Remplacer par une photo HD avec musiciens.",
+    status: "final",
+    note: DRIVE,
+    focus: "50% 30%",
+  },
+};
+
+/**
+ * « En images » : galerie horizontale (accueil). Légendes descriptives
+ * uniquement (ce que montre la photo) : aucun lieu ni client n'est nommé.
+ */
+export type GalleryPhoto = ImageMedia & {
+  id: string;
+  caption: Localized;
+  /** Taille dans la galerie : portrait haut, carré, paysage. */
+  shape: "portrait" | "square" | "landscape";
+};
+
+export const galleryPhotos: GalleryPhoto[] = [
+  {
+    id: "scene",
+    image: galerieSceneViolet,
+    shape: "portrait",
+    caption: { fr: "Sur scène", en: "On stage" },
+    alt: { fr: "ROLLA joue de la trompette sur scène, sous une lumière violette", en: "ROLLA playing the trumpet on stage, under purple light" },
+    status: "final",
+    note: DRIVE,
+  },
+  {
+    id: "invites",
+    image: galerieInvitesTrompette,
+    shape: "landscape",
+    caption: { fr: "Au milieu des invités", en: "Among the guests" },
+    alt: { fr: "ROLLA joue de la trompette au milieu des invités", en: "ROLLA playing the trumpet among the guests" },
+    status: "final",
+    note: DRIVE,
+    focus: "60% 40%",
+  },
+  {
+    id: "altitude-platines",
+    image: galerieAltitudePlatines,
+    shape: "square",
+    caption: { fr: "En altitude", en: "At altitude" },
+    alt: {
+      fr: "ROLLA aux platines en plein air, face aux montagnes enneigées",
+      en: "ROLLA at the decks outdoors, facing snowy mountains",
+    },
+    status: "final",
+    note: DRIVE,
+  },
+  {
+    id: "coeur-fete",
+    image: galerieCoeurFete,
+    shape: "portrait",
+    caption: { fr: "Au cœur de la fête", en: "In the thick of it" },
+    alt: { fr: "ROLLA, trompette levée, entouré d’invités", en: "ROLLA, trumpet raised, surrounded by guests" },
+    status: "final",
+    note: DRIVE,
+    focus: "60% 30%",
+  },
+  {
+    id: "cabine",
+    image: galerieCabineFenetres,
+    shape: "landscape",
+    caption: { fr: "Aux platines", en: "At the decks" },
+    alt: { fr: "ROLLA derrière sa cabine DJ, devant de grandes fenêtres", en: "ROLLA behind his DJ booth, in front of tall windows" },
+    status: "final",
+    note: DRIVE,
+  },
+  {
+    id: "altitude-trompette",
+    image: galerieAltitudeTrompette,
+    shape: "square",
+    caption: { fr: "En plein air", en: "Open air" },
+    alt: { fr: "ROLLA joue de la trompette face aux sommets enneigés", en: "ROLLA playing the trumpet facing snowy peaks" },
+    status: "final",
+    note: DRIVE,
+  },
+  {
+    id: "piste",
+    image: galeriePiste,
+    shape: "portrait",
+    caption: { fr: "Sur la piste", en: "On the dance floor" },
+    alt: { fr: "ROLLA traverse la piste, trompette à la main, au milieu des danseurs", en: "ROLLA crossing the dance floor, trumpet in hand, among dancers" },
+    status: "final",
+    note: DRIVE,
+    focus: "50% 30%",
+  },
+];
+
+/** « Événements & réservations » : un visuel par contexte. */
+export const bookingsMedia: Record<"club" | "corporate" | "private", ImageMedia> = {
+  club: {
+    image: evenementProjecteurs,
+    alt: { fr: "ROLLA à la trompette sous les projecteurs", en: "ROLLA playing the trumpet under spotlights" },
+    status: "final",
+    note: DRIVE,
+    focus: "60% 35%",
+  },
+  corporate: {
+    image: evenementSceneEcran,
+    alt: {
+      fr: "ROLLA sur scène, trompette à la main, devant un écran lumineux",
+      en: "ROLLA on stage, trumpet in hand, in front of a bright screen",
+    },
+    status: "final",
+    note: DRIVE,
+    focus: "45% 30%",
+  },
+  private: {
+    image: evenementInvitesDanse,
+    alt: { fr: "ROLLA joue de la trompette au milieu des invités qui dansent", en: "ROLLA playing the trumpet among dancing guests" },
+    status: "final",
+    note: DRIVE,
+    focus: "50% 30%",
   },
 };
 
 /** Page Mariages : visuel d'en-tête. */
 export const weddingsHeroMedia: ImageMedia = {
-  image: trioPleinAir,
+  image: mariageInvitesTrompette,
   alt: {
-    fr: "Formation live en blanc avec trompette et saxophone, en plein air",
-    en: "Live line-up dressed in white with trumpet and saxophone, outdoors",
+    fr: "ROLLA joue de la trompette au milieu des invités d’un mariage",
+    en: "ROLLA playing the trumpet among wedding guests",
   },
-  status: "temporary",
-  note: "Photo du site actuel (600 px de haut). Remplacer par une photo HD de mariage.",
+  status: "final",
+  note: DRIVE,
+  focus: "55% 35%",
 };
+
+/** Page Mariages : bandeau de trois photos. */
+export const weddingsPhotos: ImageMedia[] = [
+  {
+    image: mariageSourire,
+    alt: { fr: "ROLLA sourit, trompette à la main, entouré d’invités", en: "ROLLA smiling, trumpet in hand, surrounded by guests" },
+    status: "final",
+    note: DRIVE,
+    focus: "50% 30%",
+  },
+  {
+    image: mariageAmbiance,
+    alt: { fr: "ROLLA au milieu des invités, trompette à la main", en: "ROLLA among the guests, trumpet in hand" },
+    status: "final",
+    note: DRIVE,
+  },
+  {
+    image: mariageTrompetteLive,
+    alt: { fr: "ROLLA joue de la trompette, au cœur de la soirée", en: "ROLLA playing the trumpet, in the middle of the party" },
+    status: "final",
+    note: DRIVE,
+    focus: "60% 30%",
+  },
+];
 
 /**
  * « Selected performances » : galerie vidéo.

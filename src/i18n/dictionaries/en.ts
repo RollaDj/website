@@ -91,6 +91,17 @@ const en: Dictionary = {
     ],
   },
 
+  gallery: {
+    label: "In pictures",
+    title: "Every stage, a different energy.",
+    intro: "On stage, among the guests or facing the peaks: a few live moments, in pictures.",
+    hintScroll: "Keep scrolling",
+    hintSwipe: "Swipe",
+    scrollerLabel: "Photos of ROLLA live (horizontal scroll)",
+    endTitle: "The next one, at your event?",
+    endCta: "Book ROLLA",
+  },
+
   formats: {
     label: "Live formats",
     title: "Three formats. One energy.",
@@ -243,6 +254,7 @@ const en: Dictionary = {
         text: "A DJ set built around your wishes, lifted by live trumpet until the end of the night.",
       },
     ],
+    photosTitle: "Weddings in pictures",
     formatsTitle: "Formats",
     formats: [
       { name: "DJ", text: "Tailored programming and a DJ set for the party." },

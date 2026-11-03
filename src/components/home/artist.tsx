@@ -25,7 +25,8 @@ export function Artist({ locale, dict }: Props) {
                 alt={media.alt[locale]}
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
-                className="tone object-cover object-[60%_center]"
+                className="tone object-cover"
+                style={{ objectPosition: media.focus }}
               />
             </div>
           </div>

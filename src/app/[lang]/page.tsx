@@ -5,6 +5,7 @@ import { Artist } from "@/components/home/artist";
 import { Bookings } from "@/components/home/bookings";
 import { Experience } from "@/components/home/experience";
 import { Formats } from "@/components/home/formats";
+import { Gallery } from "@/components/home/gallery";
 import { Hero } from "@/components/home/hero";
 import { Performances } from "@/components/home/performances";
 import { TrustedBy } from "@/components/home/trusted-by";
@@ -27,11 +28,12 @@ export default async function HomePage() {
       <Hero locale={locale} hero={dict.hero} tags={dict.mediaTag} cutout={heroCutout} />
       <Experience copy={dict.experience} tags={dict.mediaTag} />
       <Artist locale={locale} dict={dict} />
+      <Gallery locale={locale} copy={dict.gallery} index="03" />
       <Formats locale={locale} formats={dict.formats} tags={dict.mediaTag} />
       <Performances locale={locale} copy={dict.performances} tags={dict.mediaTag} />
       <TrustedBy copy={dict.trusted} />
       <Bookings locale={locale} copy={dict.bookings} />
-      <ContactSection locale={locale} dict={dict} index="07" />
+      <ContactSection locale={locale} dict={dict} index="08" />
       <JsonLd data={artistJsonLd(locale, dict)} />
     </PageShell>
   );

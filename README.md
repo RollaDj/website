@@ -44,7 +44,7 @@ npm run dev            # http://localhost:3000 → /fr ou /en
 | Mariages | `/fr/mariage` | `/en/weddings` |
 | Mentions légales & confidentialité | `/fr/mentions-legales` | `/en/legal-notice` |
 
-Accueil, dans l’ordre : Hero → The Experience (scroll) → The Artist →
+Accueil, dans l’ordre : Hero → The Experience (scroll) → The Artist → En images →
 Live Formats → Selected Performances → Trusted By → Events & Bookings → Contact.
 
 ## Où modifier quoi (sans toucher aux composants)
@@ -69,10 +69,12 @@ Chaque média porte un statut dans `src/content/media.ts`. Tant que
 | --- | --- | --- |
 | Hero | ✅ **Définitif** : ROLLA **détouré** (fond transparent), montage de `5.mp4` (arrivée, lunettes) + `4.mp4` (trompette, en boucle) | — |
 | The Experience (scroll) | ✅ **Définitif** : `4.mp4` (dossier Drive « Vidéos Hero ») — ROLLA à la trompette. 4K vertical → 1080×1920 (scrub) + 120 images 720×1280 (mobile) | Plus tard, éventuellement : un plan DJ pour « THE RHYTHM » |
-| Portrait « The Artist » | Vraie photo du site actuel, 950 px | Portrait artistique HD (≥ 2000 px) |
-| Visuels des 3 formats | Vraies photos du site actuel, 600 px de haut | Photos HD : DJ set, DJ × trompette, avec musiciens |
+| Portrait « The Artist » | ✅ **Définitif** : photo HD du dossier Drive « Photos » (tapis rouge, trompette) | — |
+| En images (galerie) | ✅ **Définitif** : 7 photos HD du dossier Drive (scène, invités, altitude, platines, piste) | — |
+| Visuels des 3 formats | ✅ **Définitif** : photos HD du dossier Drive (platines, trompette en cabine, duo avec saxophone) | — |
 | Selected Performances | 3 vrais extraits du site actuel (720 px, filigrane Instagram sur l’un d’eux) + **3 emplacements réservés** | Extraits clubs/hôtels, événement de marque, musiciens invités |
-| Page Mariages (en-tête) | Vraie photo du site actuel, 600 px de haut | Photo HD de mariage |
+| Événements & réservations | ✅ **Définitif** : une photo HD par contexte (projecteurs, scène, invités) | — |
+| Page Mariages | ✅ **Définitif** : en-tête et bandeau de 3 photos HD du dossier Drive | — |
 | Image de partage (`public/og-image.jpg`) | Capture du hero avec la vraie vidéo | — |
 
 Aucune vidéo fictive n’est utilisée : le hero et la séquence au scroll
@@ -117,6 +119,34 @@ du bas.
   ne permet pas une vidéo WebM transparente. Une image WebP transparente
   s’affiche avant la lecture, ou à la place de la vidéo si les animations sont
   réduites.
+
+### Photos
+
+Les photos viennent du dossier Drive « Photos ». Elles sont exportées dans
+`src/assets/photos/` en sRGB, **sans métadonnées** (les coordonnées GPS des
+photos d’iPhone sont retirées), aux proportions d’origine, côté le plus long
+limité à 2 400 px (2 880 px pour l’en-tête Mariages). Next.js sert ensuite
+des versions AVIF/WebP à la bonne taille. Les noms de fichiers sont neutres et
+les légendes ne décrivent que ce que montre la photo : aucun lieu, client ou
+invité n’est nommé. L’image générée du dossier (« ChatGPT Image… ») n’est pas
+utilisée.
+
+Direction artistique : photos en noir et blanc légèrement teinté (ivoire),
+fidèle à la palette du site, et la couleur aux moments clés :
+
+- **En images** (accueil, après « L’artiste ») : galerie horizontale. Sur
+  ordinateur, la section reste en place et les photos défilent au rythme du
+  défilement. Chaque photo passe en couleur en traversant le centre de
+  l’écran, avec un léger parallaxe, et une ligne de progression suit le
+  parcours. Sur mobile, tablette ou si les animations sont réduites : bande
+  à faire glisser (ou flèches du clavier), photos en couleur.
+- **Événements & réservations** : chaque carte porte une photo en noir et
+  blanc, qui passe en couleur au survol ou au focus clavier.
+- **Page Mariages** : en-tête en noir et blanc, puis trois photos en couleur.
+
+Pour changer une photo : remplacer le fichier dans `src/assets/photos/` (ou
+en ajouter un et l’importer), puis ajuster l’entrée correspondante dans
+`src/content/media.ts` (texte alternatif FR/EN, `focus` pour le cadrage).
 
 ### Vidéos verticales
 
@@ -237,7 +267,7 @@ seulement avec votre accord :
 ## À compléter avant la mise en ligne
 
 - [x] Vidéos du hero et de la séquence au scroll
-- [ ] Photos HD et vidéos de la galerie (tableau ci-dessus), puis `SHOW_MEDIA_TAGS = false`
+- [ ] Vidéos HD de la galerie « Performances » (tableau ci-dessus), puis `SHOW_MEDIA_TAGS = false`
 - [ ] Mentions légales : éditeur, SIRET, adresse, directeur de publication
 - [ ] Configuration Resend (formulaire)
 - [ ] Relecture des textes FR / EN

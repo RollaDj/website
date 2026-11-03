@@ -36,7 +36,7 @@ export function TrustedBy({ copy }: Props) {
       <span id="testimonials" aria-hidden="true" />
       <div className="mx-auto grid max-w-[1680px] gap-8 px-5 pb-16 pt-28 sm:px-8 lg:grid-cols-12 lg:items-end lg:px-12 lg:pb-20 lg:pt-40">
         <div className="lg:col-span-7">
-          <SectionLabel index="05">{copy.label}</SectionLabel>
+          <SectionLabel index="06">{copy.label}</SectionLabel>
           <h2 id="trusted-title" data-split className="display mt-8 text-[8.2vw] sm:text-5xl lg:text-6xl xl:text-7xl">
             {copy.title}
           </h2>
